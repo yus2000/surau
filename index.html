@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="refresh" content="360">
+  <title>Media Slider Signage & Admin Panel</title>
+  <style>
+    /* RESET & BASE STYLES */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #fff;
+    }
+
+    /* SLIDER CONTAINER */
+    #slider-stage {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #000;
+    }
+
+    .media-item {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      pointer-events: none;
+    }
+
+    .media-item.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* STATUS OVERLAY & NAVIGATION UI */
+    #ui-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+      transition: opacity 0.5s ease;
+    }
+
+    #ui-overlay.autohide {
+      opacity: 0;
+    }
+
+    .top-bar {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(8px);
+      border-radius: 20px;
+      font-size: 13px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #ff4d4d;
+    }
+
+    .dot.online {
+      background-color: #2ec4b6;
+      box-shadow: 0 0 8px #2ec4b6;
+    }
+
+    .controls-group {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      gap: 10px;
+      pointer-events: auto;
+    }
+
+    .btn-icon {
+      background: rgba(0, 0, 0, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s;
+    }
+
+    .btn-icon:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* EMPTY / ERROR STATE */
+    #empty-state {
+      text-align: center;
+      padding: 30px;
+      background: rgba(20, 20, 20, 0.85);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      max-width: 450px;
+      z-index: 5;
+    }
+
+    #empty-state h2 {
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    #empty-state p {
+      color: #aaa;
+      font-size: 14px;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .btn-primary {
+      background: #3a86ef;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: #2563eb;
+    }
+
+    /* MODAL ADMIN */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: #18181b;
+      border: 1px solid #27272a;
+      width: 90%;
+      max-width: 500px;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      color: #f4f4f5;
+      user-select: text;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #27272a;
+      padding-bottom: 12px;
+    }
+
+    .modal-header h3 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: #a1a1aa;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      color: #a1a1aa;
+      margin-bottom: 6px;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      background: #09090b;
+      border: 1px solid #27272a;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .form-group input:focus {
+      border-color: #3a86ef;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+
+    .btn-secondary {
+      background: #27272a;
+      color: #f4f4f5;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background: #3f3f46;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .info-text {
+      font-size: 12px;
+      color: #71717a;
+      margin-top: 4px;
+    }
+
+    /* MEDIA PREVIEW LIST IN ADMIN */
+    .media-preview-list {
+      max-height: 150px;
+      overflow-y: auto;
+      background: #09090b;
+      border: 1px solid #27272a;
+      border-radius: 6px;
+      padding: 8px;
+      margin-top: 10px;
+    }
+
+    .media-preview-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px;
+      font-size: 12px;
+      border-bottom: 1px solid #18181b;
+    }
+
+    .media-preview-item:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body>
+    
+  <!-- SLIDER DISPLAY AREA -->
+  <div id="slider-stage">
+    <div id="empty-state">
+      <h2>Media Slider Belum Dikonfigurasi</h2>
+      <p>Silakan masuk ke panel Admin untuk memasukkan API Key Google Cloud & Folder ID tempat gambar/video Anda disimpan.</p>
+      <button class="btn-primary" onclick="openAdminModal()">Buka Mode Admin</button>
+    </div>
+  </div>
+
+  <!-- OVERLAY UI (STATUS & CONTROL BUTTONS) -->
+  <div id="ui-overlay">
+    <div class="top-bar">
+      <div class="status-badge">
+        <span id="network-dot" class="dot"></span>
+        <span id="network-text">Offline</span>
+        <span style="opacity: 0.3; margin: 0 4px;">|</span>
+        <span id="cache-status">0 Media Tersimpan</span>
+      </div>
+    </div>
+
+    <div class="controls-group">
+      <button class="btn-icon" onclick="toggleFullscreen()" title="Layar Penuh">⛶ Fullscreen</button>
+      <button class="btn-icon" onclick="openAdminModal()" title="Pengaturan Admin">⚙️ Admin</button>
+    </div>
+  </div>
+
+  <!-- ADMIN MODAL -->
+  <div id="admin-modal" class="modal-overlay">
+    <div class="modal-card">
+      
+      <!-- LOGIN FORM -->
+      <div id="admin-login-view">
+        <div class="modal-header">
+          <h3>Login Admin</h3>
+          <button class="close-btn" onclick="closeAdminModal()">&times;</button>
+        </div>
+        <form onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label for="admin-pass">Password Admin</label>
+            <input type="password" id="admin-pass" placeholder="Masukkan password ..." required>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" onclick="closeAdminModal()">Batal</button>
+            <button type="submit" class="btn-primary">Login</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- DASHBOARD CONTROLS -->
+      <div id="admin-dashboard-view" class="hidden">
+        <div class="modal-header">
+          <h3>Pengaturan Slider</h3>
+          <button class="close-btn" onclick="closeAdminModal()">&times;</button>
+        </div>
+
+        <div class="form-group">
+          <label for="gdrive-api-key">Google Drive API Key</label>
+          <input type="text" id="gdrive-api-key" placeholder="AIzaSy...">
+          <div class="info-text">Dapatkan dari Google Cloud Console</div>
+        </div>
+
+        <div class="form-group">
+          <label for="gdrive-folder-id">Google Drive Folder ID</label>
+          <input type="text" id="gdrive-folder-id" placeholder="1A2b3C4d5E6f7G8h9...">
+          <div class="info-text">ID folder yang diset "Anyone with the link can view"</div>
+        </div>
+
+        <div class="form-group">
+          <label for="slide-duration">Durasi Tampil Gambar (Detik)</label>
+          <input type="number" id="slide-duration" min="2" max="300" value="8">
+        </div>
+
+        <div class="form-group">
+          <label for="new-pass">Ubah Password Admin (Opsional)</label>
+          <input type="password" id="new-pass" placeholder="Biarkan kosong jika tidak diubah">
+        </div>
+
+        <div class="form-group">
+          <label>Status Konten Ter-sync:</label>
+          <div id="media-list-container" class="media-preview-list">
+            <div style="text-align: center; color: #666; padding: 10px;">Belum ada data</div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" onclick="clearOfflineCache()">Hapus Cache</button>
+          <button type="button" class="btn-primary" onclick="syncDriveContent()">Sync Now</button>
+          <button type="button" class="btn-primary" style="background:#10b981;" onclick="saveSettings()">Simpan</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       STATE MANAGEMENT & LOCAL STORAGE KEYS
+       ========================================================================== */
+    const CONFIG_KEYS = {
+      API_KEY: 'app_gdrive_api_key',
+      FOLDER_ID: 'app_gdrive_folder_id',
+      DURATION: 'app_slide_duration',
+      PASSWORD: 'app_admin_password',
+      MEDIA_CACHE: 'app_cached_media_metadata'
+    };
+
+    let appState = {
+      apiKey: localStorage.getItem(CONFIG_KEYS.API_KEY) || '',
+      folderId: localStorage.getItem(CONFIG_KEYS.FOLDER_ID) || '',
+      duration: parseInt(localStorage.getItem(CONFIG_KEYS.DURATION)) || 7,
+      password: localStorage.getItem(CONFIG_KEYS.PASSWORD) || 'admin123',
+      mediaList: JSON.parse(localStorage.getItem(CONFIG_KEYS.MEDIA_CACHE) || '[]'),
+      currentIndex: 0,
+      timer: null,
+      isLoggedIn: false
+    };
+
+    const CACHE_NAME = 'media-slider-offline-v1';
+
+    /* ==========================================================================
+       SERVICE WORKER REGISTRATION (INLINE VIA BLOB FOR SINGLE-FILE PROTOTYPE)
+       ========================================================================== */
+    function initServiceWorker() {
+      if ('serviceWorker' in navigator) {
+        const swCode = `
+          const CACHE_NAME = '${CACHE_NAME}';
+          self.addEventListener('install', e => self.skipWaiting());
+          self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+          self.addEventListener('fetch', e => {
+            e.respondWith(
+              caches.match(e.request).then(cachedResponse => {
+                if (cachedResponse) return cachedResponse;
+                return fetch(e.request).then(networkResponse => {
+                  if (networkResponse && networkResponse.status === 200 && (e.request.url.includes('googleusercontent.com') || e.request.url.includes('drive.google.com'))) {
+                    const responseClone = networkResponse.clone();
+                    caches.open(CACHE_NAME).then(cache => cache.put(e.request, responseClone));
+                  }
+                  return networkResponse;
+                }).catch(() => cachedResponse);
+              })
+            );
+          });
+        `;
+        const blob = new Blob([swCode], { type: 'application/javascript' });
+        navigator.serviceWorker.register(URL.createObjectURL(blob))
+          .catch(err => console.log('SW registration error:', err));
+      }
+    }
+ 
+    /* ==========================================================================
+       INITIALIZATION & NETWORK STATUS MONITORING
+       ========================================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      initServiceWorker();
+      updateNetworkStatus();
+      window.addEventListener('online', updateNetworkStatus);
+      window.addEventListener('offline', updateNetworkStatus);
+
+      // Auto-hide UI controls saat mouse diam
+      let idleTimer;
+      const overlay = document.getElementById('ui-overlay');
+      window.addEventListener('mousemove', () => {
+        overlay.classList.remove('autohide');
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => overlay.classList.add('autohide'), 3500);
+      });
+
+      if (appState.mediaList.length > 0) {
+        renderMediaElements();
+        startSlider();
+      }
+
+      // Sync otomatis jika terhubung internet
+      if (navigator.onLine && appState.apiKey && appState.folderId) {
+        syncDriveContent();
+      }
+    });
+
+    function updateNetworkStatus() {
+      const dot = document.getElementById('network-dot');
+      const text = document.getElementById('network-text');
+      if (navigator.onLine) {
+        dot.classList.add('online');
+        text.innerText = 'Online (Auto Sync)';
+      } else {
+        dot.classList.remove('online');
+        text.innerText = 'Offline (Mode Cache)';
+      }
+      updateCacheStatusUI();
+    }
+
+    function updateCacheStatusUI() {
+      document.getElementById('cache-status').innerText = `${appState.mediaList.length} Media Tersimpan`;
+    }
+
+    /* ==========================================================================
+       GOOGLE DRIVE INTEGRATION & OFFLINE CACHING
+       ========================================================================== */
+    async function syncDriveContent() {
+      if (!appState.apiKey || !appState.folderId) return;
+      if (!navigator.onLine) {
+        alert('Koneksi internet diperlukan untuk melakukan sync.');
+        return;
+      }
+
+      try {
+        const apiKey = appState.apiKey.trim();
+        const folderId = appState.folderId.trim();
+        const query = `'${folderId}' in parents and trashed = false`;
+        const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&fields=files(id,name,mimeType)&key=${apiKey}`;
+        
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.error) {
+          throw new Error(data.error.message);
+        }
+
+        const validFiles = (data.files || []).filter(f => 
+          f.mimeType.startsWith('image/') || f.mimeType.startsWith('video/')
+        ).map(f => ({
+          id: f.id,
+          name: f.name,
+          type: f.mimeType.startsWith('video/') ? 'video' : 'image',
+          // Direct view URL for Google Drive media
+          url: `https://lh3.googleusercontent.com/d/${f.id}`
+        }));
+
+        appState.mediaList = validFiles;
+        localStorage.setItem(CONFIG_KEYS.MEDIA_CACHE, JSON.stringify(validFiles));
+        
+        // Cache media assets secara masif di background
+        if ('caches' in window) {
+          const cache = await caches.open(CACHE_NAME);
+          validFiles.forEach(file => {
+            cache.add(file.url).catch(e => console.log('Cache prefetch bypass:', file.url));
+          });
+        }
+
+        renderMediaElements();
+        startSlider();
+        updateCacheStatusUI();
+        renderAdminMediaList();
+      } catch (err) {
+        console.error('Gagal mengambil data dari Google Drive:', err);
+      }
+    }
+
+    /* ==========================================================================
+       SLIDER ENGINE (IMAGE & VIDEO PLAYBACK)
+       ========================================================================== */
+    function renderMediaElements() {
+      const stage = document.getElementById('slider-stage');
+      stage.innerHTML = '';
+
+      if (appState.mediaList.length === 0) {
+        stage.innerHTML = `
+          <div id="empty-state">
+            <h2>Tidak Ada Konten</h2>
+            <p>Folder Google Drive kosong atau media belum disinkronkan.</p>
+            <button class="btn-primary" onclick="openAdminModal()">Buka Admin</button>
+          </div>`;
+        return;
+      }
+
+      appState.mediaList.forEach((item, index) => {
+        let el;
+        if (item.type === 'video') {
+          el = document.createElement('video');
+          el.src = item.url;
+          el.className = 'media-item';
+          el.muted = true;
+          el.playsInline = true;
+          el.onended = () => advanceSlide();
+        } else {
+          el = document.createElement('img');
+          el.src = item.url;
+          el.className = 'media-item';
+        }
+        el.dataset.index = index;
+        stage.appendChild(el);
+      });
+
+      appState.currentIndex = 0;
+      showSlide(0);
+    }
+
+    function showSlide(index) {
+      const items = document.querySelectorAll('.media-item');
+      if (items.length === 0) return;
+
+      items.forEach(el => {
+        el.classList.remove('active');
+        if (el.tagName === 'VIDEO') {
+          el.pause();
+          el.currentTime = 0;
+        }
+      });
+
+      const currentEl = items[index];
+      if (currentEl) {
+        currentEl.classList.add('active');
+        
+        if (currentEl.tagName === 'VIDEO') {
+          currentEl.play().catch(e => {
+            // Fallback jika browser memblokir autoplay
+            setTimeout(advanceSlide, appState.duration * 1000);
+          });
+        } else {
+          // Atur timer untuk slide gambar
+          clearTimeout(appState.timer);
+          appState.timer = setTimeout(advanceSlide, appState.duration * 1000);
+        }
+      }
+    }
+
+    function advanceSlide() {
+      if (appState.mediaList.length <= 1) return;
+      appState.currentIndex = (appState.currentIndex + 1) % appState.mediaList.length;
+      showSlide(appState.currentIndex);
+    }
+
+    function startSlider() {
+      clearTimeout(appState.timer);
+      if (appState.mediaList.length > 0) {
+        showSlide(appState.currentIndex);
+      }
+    }
+
+    /* ==========================================================================
+       ADMIN CONTROL & MODAL HANDLERS
+       ========================================================================== */
+    function openAdminModal() {
+      const modal = document.getElementById('admin-modal');
+      modal.classList.add('open');
+
+      if (appState.isLoggedIn) {
+        showAdminDashboard();
+      } else {
+        document.getElementById('admin-login-view').classList.remove('hidden');
+        document.getElementById('admin-dashboard-view').classList.add('hidden');
+      }
+    }
+
+    function closeAdminModal() {
+      document.getElementById('admin-modal').classList.remove('open');
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const passInput = document.getElementById('admin-pass').value;
+      if (passInput === appState.password) {
+        appState.isLoggedIn = true;
+        document.getElementById('admin-pass').value = '';
+        showAdminDashboard();
+      } else {
+        alert('Password Admin Salah!');
+      }
+    }
+
+    function showAdminDashboard() {
+      document.getElementById('admin-login-view').classList.add('hidden');
+      document.getElementById('admin-dashboard-view').classList.remove('hidden');
+
+      document.getElementById('gdrive-api-key').value = appState.apiKey;
+      document.getElementById('gdrive-folder-id').value = appState.folderId;
+      document.getElementById('slide-duration').value = appState.duration;
+      renderAdminMediaList();
+    }
+
+    function renderAdminMediaList() {
+      const container = document.getElementById('media-list-container');
+      if (appState.mediaList.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: #666; padding: 10px;">Belum ada media tersimpan</div>`;
+        return;
+      }
+
+      container.innerHTML = appState.mediaList.map((m, i) => `
+        <div class="media-preview-item">
+          <span>${i + 1}. ${m.name}</span>
+          <span style="color: ${m.type === 'video' ? '#f59e0b' : '#3b82f6'}; font-weight: bold;">[${m.type.toUpperCase()}]</span>
+        </div>
+      `).join('');
+    }
+
+    function saveSettings() {
+      const apiKey = document.getElementById('gdrive-api-key').value.trim();
+      const folderId = document.getElementById('gdrive-folder-id').value.trim();
+      const duration = parseInt(document.getElementById('slide-duration').value) || 7;
+      const newPass = document.getElementById('new-pass').value.trim();
+
+      appState.apiKey = apiKey;
+      appState.folderId = folderId;
+      appState.duration = duration;
+
+      localStorage.setItem(CONFIG_KEYS.API_KEY, apiKey);
+      localStorage.setItem(CONFIG_KEYS.FOLDER_ID, folderId);
+      localStorage.setItem(CONFIG_KEYS.DURATION, duration);
+
+      if (newPass) {
+        appState.password = newPass;
+        localStorage.setItem(CONFIG_KEYS.PASSWORD, newPass);
+        document.getElementById('new-pass').value = '';
+      }
+
+      alert('Pengaturan berhasil disimpan!');
+      syncDriveContent();
+      closeAdminModal();
+    }
+
+    async function clearOfflineCache() {
+      if (confirm('Apakah Anda yakin ingin menghapus seluruh cache offline media?')) {
+        if ('caches' in window) {
+          await caches.delete(CACHE_NAME);
+        }
+        localStorage.removeItem(CONFIG_KEYS.MEDIA_CACHE);
+        appState.mediaList = [];
+        renderMediaElements();
+        updateCacheStatusUI();
+        renderAdminMediaList();
+        alert('Cache offline berhasil dibersihkan.');
+      }
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          alert(`Gagal mengaktifkan mode fullscreen: ${err.message}`);
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+  </script>
+</body>
+</html>
