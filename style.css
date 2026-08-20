@@ -89,8 +89,8 @@ body.hide-cursor {
 }
 
 .btn-action:hover {
-  background: #BCF862;
-  color: #541003F;
+  background: #FDD85E;
+  color: #0D0D0D;
   border-color: #FFFFFF;
   transform: scale(1.05);
 }
