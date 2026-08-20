@@ -70,7 +70,7 @@ body.hide-cursor {
 }
 
 .btn-action {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.6);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.5);
   padding: 10px 16px;
@@ -90,7 +90,7 @@ body.hide-cursor {
 
 .btn-action:hover {
   background: #ffff00;
-  color: ##ED6E05;
+  color: #B00202;
   border-color: #ffffff;
   transform: scale(1.05);
 }
