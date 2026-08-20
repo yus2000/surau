@@ -8,6 +8,19 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body, html { width: 100%; height: 100%; overflow: hidden; background: #000; font-family: system-ui, -apple-system, sans-serif; }
 
+    /* Efek Transisi Mulus untuk Menyembunyikan Tombol */
+    .controls-container {
+      transition: opacity 0.5s ease;
+    }
+
+    /* Class Khusus Saat Idle/Diam */
+    body.hide-cursor, 
+    body.hide-cursor .controls-container {
+      cursor: none !important;
+      opacity: 0 !important;
+      pointer-events: none;
+    }
+
     .fullscreen {
       width: 100vw;
       height: 100vh;
@@ -193,8 +206,31 @@
     const DEFAULT_API_KEY = 'AIzaSyBJyOWGFsKwOtjOSUlXHwB-qwuhrbr3m2M';
     const DEFAULT_FOLDER_ID = '18D_Xnk5soc0BaDBdlI0jvt9BC0i391RC';
     const DEFAULT_PASSWORD = 'admin123';
-    const DEFAULT_INTERVAL = 12; 
+    const DEFAULT_INTERVAL = 5; 
     const DEFAULT_SYNC_INTERVAL = 1; 
+
+      let idleTimer = null;
+
+      function resetIdleTimer() {
+        // Tampilkan kembali tombol dan kursor
+        document.body.classList.remove('hide-cursor');
+        
+        // Sembunyikan kembali setelah 3 detik diam
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => {
+          document.body.classList.add('hide-cursor');
+        }, 3000);
+      }
+
+      // Deteksi pergerakan mouse, sentuhan, atau tombol remote TV
+      window.addEventListener('mousemove', resetIdleTimer);
+      window.addEventListener('touchstart', resetIdleTimer);
+      window.addEventListener('keydown', resetIdleTimer);
+
+      // Jalankan timer saat halaman dibuka
+      resetIdleTimer();
+
+
 
     let mediaList = [];
     let currentIndex = 0;
