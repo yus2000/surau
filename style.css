@@ -12,18 +12,6 @@ body, html {
   font-family: system-ui, -apple-system, sans-serif; 
 }
 
-/* Efek Transisi Mulus untuk Menyembunyikan Tombol & Kursor (TV Idle) */
-.controls-container {
-  transition: opacity 0.5s ease;
-}
-
-body.hide-cursor, 
-body.hide-cursor .controls-container {
-  cursor: none !important;
-  opacity: 0 !important;
-  pointer-events: none;
-}
-
 /* Layout Display */
 .fullscreen {
   width: 100vw;

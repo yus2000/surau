@@ -5,14 +5,13 @@ const DEFAULT_PASSWORD = 'admin123';
 const DEFAULT_INTERVAL = 5; 
 const DEFAULT_SYNC_INTERVAL = 1; 
 
-// Awalan Kunci Unik berdasarkan Default Folder ID agar tidak bentrok dengan app lain
+// Awalan Kunci Unik berdasarkan Default Folder ID
 const STORAGE_PREFIX = 'app_' + DEFAULT_FOLDER_ID.substring(0, 8) + '_';
 
 let mediaList = [];
 let currentIndex = 0;
 let slideTimer = null;
 let syncTimer = null;
-let idleTimer = null;
 
 // Service Worker Registration
 if ('serviceWorker' in navigator) {
@@ -46,26 +45,7 @@ window.onload = () => {
   loadMedia();
   startSlider();
   startAutoSync();
-  resetIdleTimer();
 };
-
-// Fitur Auto-Hide UI saat Idle untuk Layar TV
-function resetIdleTimer() {
-  document.body.classList.remove('hide-cursor');
-  clearTimeout(idleTimer);
-  idleTimer = setTimeout(() => {
-    document.body.classList.add('hide-cursor');
-  }, 3000);
-}
-
-window.addEventListener('mousemove', resetIdleTimer);
-window.addEventListener('touchstart', resetIdleTimer);
-window.addEventListener('keydown', (e) => {
-  resetIdleTimer();
-  // Shortcut Keyboard/Remote TV
-  if (e.key === 'f' || e.key === 'F') toggleFullscreen();
-  if (e.key === 'a' || e.key === 'A') openAdminModal();
-});
 
 function toggleFullscreen() {
   const elem = document.documentElement;
@@ -229,7 +209,6 @@ function saveSettings() {
   const syncIntervalInput = document.getElementById('sync-interval').value;
   const newPassInput = document.getElementById('new-admin-pass').value.trim();
 
-  // Menerapkan logika reset kunci jika dikosongkan/sesuai default
   if (apiKeyInput && apiKeyInput !== DEFAULT_API_KEY) {
     localStorage.setItem(STORAGE_PREFIX + 'drive_api_key', apiKeyInput);
   } else {
