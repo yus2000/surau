@@ -5,15 +5,14 @@ const DEFAULT_PASSWORD = 'admin123';
 const DEFAULT_INTERVAL = 5; 
 const DEFAULT_SYNC_INTERVAL = 1; 
 
-// Awalan Kunci Unik berdasarkan Default Folder ID
 const STORAGE_PREFIX = 'app_' + DEFAULT_FOLDER_ID.substring(0, 8) + '_';
 
 let mediaList = [];
 let currentIndex = 0;
 let slideTimer = null;
 let syncTimer = null;
+let idleTimer = null;
 
-// Service Worker Registration
 if ('serviceWorker' in navigator) {
   const swCode = `
     const CACHE_NAME = 'media-slider-v3';
@@ -29,7 +28,6 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(console.error);
 }
 
-// Mengambil data terkonfigurasi (Storage / Default HTML)
 function getApiKey() { return localStorage.getItem(STORAGE_PREFIX + 'drive_api_key') || DEFAULT_API_KEY; }
 function getFolderId() { return localStorage.getItem(STORAGE_PREFIX + 'drive_folder_id') || DEFAULT_FOLDER_ID; }
 function getAdminPassword() { return localStorage.getItem(STORAGE_PREFIX + 'admin_password') || DEFAULT_PASSWORD; }
@@ -45,7 +43,45 @@ window.onload = () => {
   loadMedia();
   startSlider();
   startAutoSync();
+  setupAutoHideUI();
 };
+
+// ============================================================
+// SISTEM AUTO-HIDE / AUTO-ON UI (OPTIMIZED)
+// ============================================================
+function setupAutoHideUI() {
+  const controls = document.querySelector('.controls-container');
+
+  function showUI() {
+    controls.classList.remove('hide-ui');
+    document.body.classList.remove('hide-cursor');
+
+    clearTimeout(idleTimer);
+    // Sembunyikan otomatis jika tidak ada aktivitas selama 3 detik
+    idleTimer = setTimeout(() => {
+      controls.classList.add('hide-ui');
+      document.body.classList.add('hide-cursor');
+    }, 3000);
+  }
+
+  // Gunakan requestAnimationFrame agar tidak mengganggu performa pergantian slide
+  let isTicking = false;
+  window.addEventListener('mousemove', () => {
+    if (!isTicking) {
+      window.requestAnimationFrame(() => {
+        showUI();
+        isTicking = false;
+      });
+      isTicking = true;
+    }
+  });
+
+  window.addEventListener('touchstart', showUI);
+  window.addEventListener('keydown', showUI);
+
+  // Jalankan pertama kali
+  showUI();
+}
 
 function toggleFullscreen() {
   const elem = document.documentElement;
@@ -62,7 +98,6 @@ function toggleFullscreen() {
   }
 }
 
-// Fetch Google Drive File List
 async function fetchFromDrive(folderId, apiKey) {
   if (!folderId || !apiKey || folderId.includes('MASUKKAN_') || apiKey.includes('MASUKKAN_')) {
     return [];
@@ -97,7 +132,6 @@ async function fetchFromDrive(folderId, apiKey) {
   }
 }
 
-// Load & Synchronize Media
 async function loadMedia(silent = false) {
   const apiKey = getApiKey();
   const folderId = getFolderId();
