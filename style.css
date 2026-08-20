@@ -90,7 +90,7 @@ body.hide-cursor {
 
 .btn-action:hover {
   background: #ffff00;
-  color: #B00202;
+  color: #000000;
   border-color: #ffffff;
   transform: scale(1.05);
 }
