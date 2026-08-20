@@ -209,28 +209,6 @@
     const DEFAULT_INTERVAL = 5; 
     const DEFAULT_SYNC_INTERVAL = 1; 
 
-      let idleTimer = null;
-
-      function resetIdleTimer() {
-        // Tampilkan kembali tombol dan kursor
-        document.body.classList.remove('hide-cursor');
-        
-        // Sembunyikan kembali setelah 3 detik diam
-        clearTimeout(idleTimer);
-        idleTimer = setTimeout(() => {
-          document.body.classList.add('hide-cursor');
-        }, 3000);
-      }
-
-      // Deteksi pergerakan mouse, sentuhan, atau tombol remote TV
-      window.addEventListener('mousemove', resetIdleTimer);
-      window.addEventListener('touchstart', resetIdleTimer);
-      window.addEventListener('keydown', resetIdleTimer);
-
-      // Jalankan timer saat halaman dibuka
-      resetIdleTimer();
-
-
 
     let mediaList = [];
     let currentIndex = 0;
