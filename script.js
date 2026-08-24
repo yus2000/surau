@@ -309,3 +309,20 @@ function closeAdminModal() {
 function logoutAdmin() {
   closeAdminModal();
 }
+
+// Pantau Status Koneksi Internet
+function updateConnectionStatus() {
+  const statusEl = document.getElementById('connection-status');
+  if (!statusEl) return;
+
+  if (navigator.onLine) {
+    statusEl.classList.remove('show'); // Sembunyikan ikon jika Online
+  } else {
+    statusEl.classList.add('show');    // Tampilkan ikon jika Offline
+  }
+}
+
+// Jalankan saat pertama kali dimuat dan dengarkan event perubahan jaringan
+window.addEventListener('online', updateConnectionStatus);
+window.addEventListener('offline', updateConnectionStatus);
+document.addEventListener('DOMContentLoaded', updateConnectionStatus);
