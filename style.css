@@ -212,22 +212,22 @@ body.hide-cursor {
   display: none !important; 
 }
 
-/* Jam Digital Floating Transparan dengan Detik (Kiri Atas) */
+/* Jam Digital Floating Tanpa Detik (Kiri Atas) */
 #digital-clock {
   position: fixed;
-  top: 20px;
-  left: 20px;
+  top: 25px;
+  left: 25px;
   z-index: 99999;
-  font-family: 'Segoe UI', Roboto, sans-serif;
-  font-size: 2.6rem; /* Sedikit disesuaikan agar muat dengan tambahan detik */
-  font-weight: 600;
-  color: rgba(150, 255, 255, 0.7); /* Warna teks putih sedikit transparan */
-  padding: 6px 16px;
-  background: rgba(0, 0, 0, 0.2); /* Background sangat transparan / tipis */
+  font-family: 'Orbitron', monospace, sans-serif; /* Font jam digital */
+  font-size: 3rem; /* Ukuran pas tanpa detik */
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+  padding: 8px 20px;
+  background: rgba(0, 0, 0, 0.2); /* Sangat transparan */
   backdrop-filter: blur(4px);
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.4); /* Pendaran neon halus */
   pointer-events: none;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
 }
