@@ -310,19 +310,19 @@ function logoutAdmin() {
   closeAdminModal();
 }
 
-// Pantau Status Koneksi Internet
+// Pengendali Indikator Offline Floating
 function updateConnectionStatus() {
   const statusEl = document.getElementById('connection-status');
   if (!statusEl) return;
 
   if (navigator.onLine) {
-    statusEl.classList.remove('show'); // Sembunyikan ikon jika Online
+    statusEl.classList.remove('show'); // Sembunyikan jika online
   } else {
-    statusEl.classList.add('show');    // Tampilkan ikon jika Offline
+    statusEl.classList.add('show');    // Tampilkan melayang di kiri atas jika offline
   }
 }
 
-// Jalankan saat pertama kali dimuat dan dengarkan event perubahan jaringan
+// Event Listener Otomatis
 window.addEventListener('online', updateConnectionStatus);
 window.addEventListener('offline', updateConnectionStatus);
 document.addEventListener('DOMContentLoaded', updateConnectionStatus);
