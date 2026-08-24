@@ -216,7 +216,7 @@ body.hide-cursor {
 #connection-status {
   position: fixed;
   top: 20px;
-  left: 20px;
+  left: 10px;
   z-index: 99999; /* Memastikan selalu di atas video/image */
   display: flex;
   align-items: center;
