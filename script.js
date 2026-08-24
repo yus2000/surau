@@ -2,7 +2,7 @@
 const DEFAULT_API_KEY = 'AIzaSyBJyOWGFsKwOtjOSUlXHwB-qwuhrbr3m2M';
 const DEFAULT_FOLDER_ID = '18D_Xnk5soc0BaDBdlI0jvt9BC0i391RC';
 const DEFAULT_PASSWORD = 'admin123';
-const DEFAULT_INTERVAL = 5; 
+const DEFAULT_INTERVAL = 10; 
 const DEFAULT_SYNC_INTERVAL = 1; 
 
 const STORAGE_PREFIX = 'app_' + DEFAULT_FOLDER_ID.substring(0, 8) + '_';
