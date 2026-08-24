@@ -215,15 +215,15 @@ body.hide-cursor {
 /* Jam Digital Floating Transparan dengan Detik (Kiri Atas) */
 #digital-clock {
   position: fixed;
-  top: 25px;
-  left: 25px;
+  top: 20px;
+  left: 20px;
   z-index: 99999;
   font-family: 'Segoe UI', Roboto, sans-serif;
-  font-size: 2.8rem; /* Sedikit disesuaikan agar muat dengan tambahan detik */
+  font-size: 2.6rem; /* Sedikit disesuaikan agar muat dengan tambahan detik */
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.9); /* Warna teks putih sedikit transparan */
+  color: rgba(150, 255, 255, 0.7); /* Warna teks putih sedikit transparan */
   padding: 6px 16px;
-  background: rgba(0, 0, 0, 0.25); /* Background sangat transparan / tipis */
+  background: rgba(0, 0, 0, 0.2); /* Background sangat transparan / tipis */
   backdrop-filter: blur(4px);
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
