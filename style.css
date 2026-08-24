@@ -212,34 +212,22 @@ body.hide-cursor {
   display: none !important; 
 }
 
-/* Indikator Floating Offline (Kiri Atas) */
-#connection-status {
+/* Jam Digital Floating (Kiri Atas) */
+#digital-clock {
   position: fixed;
-  top: 20px;
-  left: 10px;
-  z-index: 99999; /* Memastikan selalu di atas video/image */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.45); /* Background gelap transparan */
-  backdrop-filter: blur(4px); /* Efek blur halus di belakang ikon */
-  border-radius: 50%; /* Bentuk lingkaran melayang */
-  color: #F7FF00; /* Warna merah indikator offline */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.4s ease, visibility 0.4s ease;
-  pointer-events: none; /* Tidak mengganggu navigasi/klik */
-}
-
-/* Tampilkan hanya saat offline */
-#connection-status.show {
-  opacity: 1;
-  visibility: visible;
-}
-
-.icon-no-connection {
-  fill: #F7FF00;
-  filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.5));
+  top: 25px;
+  left: 25px;
+  z-index: 99999; /* Memastikan selalu di atas media */
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  font-size: 3.5rem; /* Ukuran besar untuk TV */
+  font-weight: 700;
+  color: #ffffff;
+  padding: 8px 20px;
+  background: rgba(0, 0, 0, 0.4); /* Transparan agar tidak menutupi media */
+  backdrop-filter: blur(8px); /* Efek blur halus */
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  pointer-events: none; /* Tidak mengganggu klik/interaksi */
+  letter-spacing: 2px;
 }
