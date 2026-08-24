@@ -310,7 +310,7 @@ function logoutAdmin() {
   closeAdminModal();
 }
 
-// Pengendali Jam Digital dengan Detik
+// Pengendali Jam Digital Real-time
 function startDigitalClock() {
   const clockEl = document.getElementById('digital-clock');
   if (!clockEl) return;
@@ -319,15 +319,13 @@ function startDigitalClock() {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
-    // const seconds = String(now.getSeconds()).padStart(2, '0');
     
-    // Format: HH:MM:SS
     clockEl.textContent = `${hours}:${minutes}`;
   }
 
-  updateClock(); // Jalankan langsung
-  setInterval(updateClock, 1000); // Perbarui setiap 1 detik
+  updateClock(); // Jalankan langsung saat pertama kali dimuat
+  setInterval(updateClock, 1000); // Perbarui setiap detik
 }
 
-// Jalankan fungsi jam saat halaman dimuat
+// Jalankan jam saat halaman selesai dimuat
 document.addEventListener('DOMContentLoaded', startDigitalClock);
