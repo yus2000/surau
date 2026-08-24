@@ -211,3 +211,32 @@ body.hide-cursor {
 .hidden { 
   display: none !important; 
 }
+
+/* Indikator Status Offline */
+#connection-status {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #ff5252;
+  border-radius: 20px;
+  font-family: sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+#connection-status.show {
+  opacity: 1;
+}
+
+.icon-disconnect {
+  fill: #ff5252;
+}
