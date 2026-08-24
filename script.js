@@ -310,19 +310,22 @@ function logoutAdmin() {
   closeAdminModal();
 }
 
-// Pengendali Indikator Offline Floating
-function updateConnectionStatus() {
-  const statusEl = document.getElementById('connection-status');
-  if (!statusEl) return;
+// Pengendali Jam Digital Real-time
+function startDigitalClock() {
+  const clockEl = document.getElementById('digital-clock');
+  if (!clockEl) return;
 
-  if (navigator.onLine) {
-    statusEl.classList.remove('show'); // Sembunyikan jika online
-  } else {
-    statusEl.classList.add('show');    // Tampilkan melayang di kiri atas jika offline
+  function updateClock() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    
+    clockEl.textContent = `${hours}:${minutes}`;
   }
+
+  updateClock(); // Jalankan langsung saat pertama kali dimuat
+  setInterval(updateClock, 1000); // Perbarui setiap detik
 }
 
-// Event Listener Otomatis
-window.addEventListener('online', updateConnectionStatus);
-window.addEventListener('offline', updateConnectionStatus);
-document.addEventListener('DOMContentLoaded', updateConnectionStatus);
+// Jalankan jam saat halaman selesai dimuat
+document.addEventListener('DOMContentLoaded', startDigitalClock);
