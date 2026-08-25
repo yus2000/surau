@@ -9,8 +9,8 @@
 /* 2. Jam Digital Floating menggunakan font DSDigital (Kiri Atas) */
 #digital-clock {
   position: fixed;
-  top: 25px;
-  left: 25px;
+  top: 20px;
+  left: 20px;
   z-index: 99999;
   font-family: 14 Segment LED, monospace, sans-serif; /* Menggunakan font ds-digib.ttf */
   font-size: 3.5rem; /* Ukuran font disesuaikan agar pas dengan ds-digib */
