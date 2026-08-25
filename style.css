@@ -1,6 +1,6 @@
 /* 1. Mendaftarkan font lokal ds-digib.ttf */
 @font-face {
-  font-family: 'DSDigital';
+  font-family: '14 Segment LED Regular';
   src: url('14 Segment LED Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
