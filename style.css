@@ -12,7 +12,7 @@
   top: 25px;
   left: 25px;
   z-index: 99999;
-  font-family: '14 Segment LED Regular', monospace, sans-serif; /* Menggunakan font ds-digib.ttf */
+  font-family: 14 Segment LED, monospace, sans-serif; /* Menggunakan font ds-digib.ttf */
   font-size: 3.5rem; /* Ukuran font disesuaikan agar pas dengan ds-digib */
   font-weight: normal;
   color: rgba(255, 255, 255, 0.95);
