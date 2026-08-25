@@ -1,3 +1,31 @@
+/* 1. Mendaftarkan font lokal ds-digib.ttf */
+@font-face {
+  font-family: 'DSDigital';
+  src: url('ds-digib.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* 2. Jam Digital Floating menggunakan font DSDigital (Kiri Atas) */
+#digital-clock {
+  position: fixed;
+  top: 25px;
+  left: 25px;
+  z-index: 99999;
+  font-family: 'DSDigital', monospace, sans-serif; /* Menggunakan font ds-digib.ttf */
+  font-size: 3.5rem; /* Ukuran font disesuaikan agar pas dengan ds-digib */
+  font-weight: normal;
+  color: rgba(255, 255, 255, 0.95);
+  padding: 6px 20px;
+  background: rgba(0, 0, 0, 0.2); /* Sangat transparan */
+  backdrop-filter: blur(4px);
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+  letter-spacing: 2px;
+}
+
 * { 
   margin: 0; 
   padding: 0; 
