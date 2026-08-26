@@ -12,7 +12,7 @@
   top: 2vw;                  /* Jarak responsif dari atas */
   left: 2vw;                 /* Jarak responsif dari kiri */
   z-index: 99999;
-  font-family: 'DSDigital', monospace, sans-serif;
+  font-family: 'Flipclockwhite', monospace, sans-serif;
   
   /* Ukuran font responsif: Menggunakan vw agar tidak membesar berlebihan di TV */
   font-size: clamp(1.8rem, 3.5vw, 3rem); 
