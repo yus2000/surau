@@ -6,24 +6,34 @@
   font-style: normal;
 }
 
-/* 2. Jam Digital Floating menggunakan font DSDigital (Kiri Atas) */
+/* Styling Jam Digital Responsif untuk TV */
 #digital-clock {
   position: fixed;
-  top: 20px;
-  left: 20px;
+  top: 2vw;                  /* Jarak responsif dari atas */
+  left: 2vw;                 /* Jarak responsif dari kiri */
   z-index: 99999;
-  font-family: FLIPclockwhite, monospace, sans-serif; /* Menggunakan font ds-digib.ttf */
-  font-size: 3.5rem; /* Ukuran font disesuaikan agar pas dengan ds-digib */
-  font-weight: normal;
-  color: rgba(255, 255, 255, 0.95);
-  padding: 6px 20px;
-  background: rgba(0, 0, 0, 0.2); /* Sangat transparan */
+  font-family: 'DSDigital', monospace, sans-serif;
+  
+  /* Ukuran font responsif: Menggunakan vw agar tidak membesar berlebihan di TV */
+  font-size: clamp(1.8rem, 3.5vw, 3rem); 
+  
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0.4vw 1vw;         /* Padding responsif */
+  background: rgba(0, 0, 0, 0.2); 
   backdrop-filter: blur(4px);
-  border-radius: 10px;
+  border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
   pointer-events: none;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
+  line-height: 1;            /* Mencegah spasi kosong di atas/bawah teks */
+}
+
+/* Penyesuaian khusus jika layar TV sangat lebar/besar */
+@media screen and (min-width: 1200px) {
+  #digital-clock {
+    font-size: 2.2rem;       /* Mengunci ukuran batas atas agar tetap ringkas */
+  }
 }
 
 * { 
