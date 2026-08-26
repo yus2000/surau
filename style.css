@@ -1,7 +1,7 @@
 /* 1. Import Font Lokal Flipclockwhite.ttf */
 @font-face {
-  font-family: 'LEDCalculator';
-  src: url('LEDCalculator.ttf') format('truetype');
+  font-family: 'FLIPclock';
+  src: url('FLIPclockwhite.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -12,7 +12,7 @@
   top: 2vw;
   left: 2vw;
   z-index: 99999;
-  font-family: 'LEDCalculator', monospace, sans-serif; /* Menggunakan font LEDCalculator.ttf */
+  font-family: 'FLIPclockwhite', monospace, sans-serif; /* Menggunakan font LEDCalculator.ttf */
   
   /* Ukuran responsif agar pas dan tidak menutupi media slider di TV */
   font-size: clamp(1.8rem, 3.5vw, 2.8rem); 
