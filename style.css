@@ -1,38 +1,38 @@
-/* 1. Mendaftarkan font lokal ds-digib.ttf */
+/* 1. Import Font Lokal Flipclockwhite.ttf */
 @font-face {
-  font-family: 'FLIPclockwhite';
-  src: url('FLIPclockwhite.ttf') format('truetype');
+  font-family: 'FlipClockWhite';
+  src: url('Flipclockwhite.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
-/* Styling Jam Digital Responsif untuk TV */
+/* 2. Jam Digital Floating Responsif (Kiri Atas) */
 #digital-clock {
   position: fixed;
-  top: 2vw;                  /* Jarak responsif dari atas */
-  left: 2vw;                 /* Jarak responsif dari kiri */
+  top: 2vw;
+  left: 2vw;
   z-index: 99999;
-  font-family: 'Flipclock', monospace, sans-serif;
+  font-family: 'FlipClockWhite', monospace, sans-serif; /* Menggunakan font Flipclockwhite.ttf */
   
-  /* Ukuran font responsif: Menggunakan vw agar tidak membesar berlebihan di TV */
-  font-size: clamp(1.8rem, 3.5vw, 3rem); 
+  /* Ukuran responsif agar pas dan tidak menutupi media slider di TV */
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem); 
   
   color: rgba(255, 255, 255, 0.9);
-  padding: 0.4vw 1vw;         /* Padding responsif */
-  background: rgba(0, 0, 0, 0.2); 
+  padding: 0.4vw 1vw;
+  background: rgba(0, 0, 0, 0.2); /* Sangat transparan */
   backdrop-filter: blur(4px);
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
   pointer-events: none;
   letter-spacing: 1px;
-  line-height: 1;            /* Mencegah spasi kosong di atas/bawah teks */
+  line-height: 1;
 }
 
-/* Penyesuaian khusus jika layar TV sangat lebar/besar */
+/* Mengunci batas atas ukuran di layar TV besar */
 @media screen and (min-width: 1200px) {
   #digital-clock {
-    font-size: 2.2rem;       /* Mengunci ukuran batas atas agar tetap ringkas */
+    font-size: 2.2rem;
   }
 }
 
